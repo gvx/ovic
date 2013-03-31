@@ -1,0 +1,10 @@
+#!/usr/bin/env python2.7
+import argparse
+from window import Window
+
+parser = argparse.ArgumentParser(description='OpenDocument Vi clone')
+parser.add_argument('filename', metavar='FILE', help='The file to edit')
+args = parser.parse_args()
+
+w = Window(args.filename)
+w.run()
