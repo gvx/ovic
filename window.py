@@ -8,7 +8,7 @@ class Window(urwid.Frame):
         self.filename = filename
         self.document = Document(self.filename)
         self.edit = Editor(self)
-        self.edit.set_edit_text(self.document.lines())
+        self.edit.set_edit_markup(self.document.lines())
         fill = urwid.Filler(self.edit, valign='top')
         self.statusbar = urwid.Text(u'')
         super(Window, self).__init__(fill, footer=self.statusbar)

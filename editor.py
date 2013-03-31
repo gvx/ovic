@@ -6,6 +6,7 @@ class Editor(urwid.Edit):
         super(Editor, self).__init__(multiline=True, *args, **kwargs)
         self.mode = 'n'
         self.master = master
+        self.edit_attr = []
         self.status_labels = {'i': u' -- INSERT --                            {col},{row}', 'n': u'{filename:40} {col},{row}'}
     def set_mode(self, mode, size=None):
         self.mode = mode
@@ -64,6 +65,10 @@ class Editor(urwid.Edit):
         cmd = edit.edit_text[len(edit.initchar):]
         if cmd in ('x', 'q'):
             raise urwid.ExitMainLoop()
+    def get_text(self):
+        return self.edit_text, self.edit_attr
+    def set_edit_markup(self, markup):
+        self.edit_text, self.edit_attr = urwid.decompose_tagmarkup(markup)
 
 class CommandEdit(urwid.Edit):
     def __init__(self, master, initchar, *args, **kwargs):
