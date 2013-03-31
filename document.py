@@ -7,4 +7,15 @@ class Document(object):
     def write(self, filename):
         self.obj.save(filename)
     def lines(self):
-        return self.obj.get_body().get_text(True)
+        l = ''
+        for i in self.obj.get_body().get_children():
+            if i.get_tag() == 'text:sequence-decls':
+                continue
+            l += i.get_text() or ''
+            for j in i.get_children():
+                if j.get_tag() == 'text:line-break':
+                    l += '\n'
+                l += j.get_text() or ''
+                l += j.get_tail() or ''
+            l += '\n\n'
+        return l[:-2]

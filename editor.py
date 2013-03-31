@@ -45,16 +45,22 @@ class Editor(urwid.Edit):
                 p = move_next_char(self.edit_text, p, len(self.edit_text))
                 self.set_edit_pos(p)
             elif key == ':':
-                self.master.contents['footer'] = (CommandEdit(self, ':'), self.master.contents['footer'][1])
-                self.master.focus_position = 'footer'
+                self.command_start(':')
+            elif key == '/':
+                self.command_start('/')
         elif self.mode == 'i':
             if key == 'esc':
                 self.set_mode('n', size)
             else:
                 super(Editor, self).keypress(size, key)
+    def command_start(self, char):
+        self.master.contents['footer'] = (CommandEdit(self, char), self.master.contents['footer'][1])
+        self.master.focus_position = 'footer'
     def command_done(self, edit):
         self.master.focus_position = 'body'
         self.master.contents['footer'] = (self.master.statusbar, self.master.contents['footer'][1])
+        if not edit.edit_text:
+            return
         cmd = edit.edit_text[len(edit.initchar):]
         if cmd in ('x', 'q'):
             raise urwid.ExitMainLoop()
@@ -71,8 +77,8 @@ class CommandEdit(urwid.Edit):
             self.master.command_done(self)
         elif self._command_map[key] == urwid.CURSOR_LEFT and self.edit_pos <= len(self.initchar):
             pass
-        elif key=="backspace" and self.edit_pos <= len(self.initchar):
-            self.set_edit_text(self.initchar)
+        elif (key == 'backspace' and self.edit_pos <= len(self.initchar)) or key == 'esc':
+            self.set_edit_text(u'')
             self.master.command_done(self)
         else:
             super(CommandEdit, self).keypress(size, key)
