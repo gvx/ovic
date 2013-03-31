@@ -11,6 +11,8 @@ class Document(object):
         for i in self.obj.get_body().get_children():
             if i.get_tag() == 'text:sequence-decls':
                 continue
+            if i.get_tag() == 'text:h':
+                l += '#' * int(i.get_attributes()['text:outline-level']) + ' '
             l += i.get_text() or ''
             for j in i.get_children():
                 if j.get_tag() == 'text:line-break':
