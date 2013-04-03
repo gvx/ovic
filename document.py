@@ -12,13 +12,14 @@ class Document(object):
             if i.get_tag() == 'text:sequence-decls':
                 continue
             if i.get_tag() == 'text:h':
-                l.append(('bold', '#' * int(i.get_attributes()['text:outline-level']) + ' ' + (i.get_text() or '')))
+                l.append(('heading', '#' * int(i.get_attributes()['text:outline-level']) + ' ' + (i.get_text() or '')))
             else:
-                l.append(('blue', i.get_text() or ''))
+                l.append(i.get_text() or '')
             for j in i.get_children():
                 if j.get_tag() == 'text:line-break':
-                    l.append('\n')
-                l.append(j.get_text() or '')
+                    l.append(('soft break', ' \n'))
+                else:
+                    l.append(('span', j.get_text() or ''))
                 l.append(j.get_tail() or '')
             l.append('\n\n')
         return l[:-1]

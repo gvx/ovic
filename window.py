@@ -15,5 +15,9 @@ class Window(urwid.Frame):
     def set_status(self, text):
         self.statusbar.set_text(text)
     def run(self):
-        loop = urwid.MainLoop(self)
+        loop = urwid.MainLoop(self,
+                              palette=[('heading', 'bold', ''),
+                                       ('span', 'underline', ''),
+                                       ('current span', 'underline,yellow', ''),
+                                       ('soft break', '', 'dark red')])
         loop.run()

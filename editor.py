@@ -52,6 +52,10 @@ class Editor(urwid.Edit):
         elif self.mode == 'i':
             if key == 'esc':
                 self.set_mode('n', size)
+            elif key == 'meta enter':
+                self.insert_text('\n')
+            elif key == 'enter':
+                self.insert_text('\n\n')
             else:
                 super(Editor, self).keypress(size, key)
     def command_start(self, char):
