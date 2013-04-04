@@ -94,15 +94,15 @@ class Editor(urwid.Edit):
                     self.path = self.path[key]
                     if callable(self.path):
                         if self.path.command_or_motion == 'motion':
-                            self.path(document=self.master.document, editor=self, count=int(self.count or '1', 10), size=size)
+                            self.do_command(self.path, size)
                             if self.future_command:
-                                self.future_command(document=self.master.document, editor=self, count=int(self.count or '1', 10), size=size)
+                                self.do_command(self.future_command, size)
                             else:
                                 self.master.document.move_caret()
                                 self.move_cursor_to_coords(size, self.master.document.caret.offset, self.master.document.caret.par)
                             self.reset_command_path()
                         elif self.path.immediate:
-                            self.path(document=self.master.document, editor=self, count=int(self.count or '1', 10), size=size)
+                            self.do_command(self.path, size)
                             self.reset_command_path()
                         else:
                             self.future_command = self.path
@@ -128,7 +128,7 @@ class Editor(urwid.Edit):
             return
         cmd = edit.edit_text[len(edit.initchar):]
         if cmd in self.path:
-            self.path[cmd](document=self.master.document, editor=self, count=int(self.count or '1', 10), size=None)
+            self.do_command(self.path[cmd], None)
         elif cmd in ('x', 'q'):
             raise urwid.ExitMainLoop()
         self.set_mode('n')
@@ -136,6 +136,8 @@ class Editor(urwid.Edit):
         return self.edit_text, self.edit_attr
     def set_edit_markup(self, markup):
         self.edit_text, self.edit_attr = urwid.decompose_tagmarkup(markup)
+    def do_command(self, command, size):
+        command(document=self.master.document, editor=self, count=int(self.count or '1', 10), size=size)
 
 class CommandEdit(urwid.Edit):
     def __init__(self, master, initchar, *args, **kwargs):
