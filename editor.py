@@ -38,6 +38,7 @@ class Editor(urwid.Edit):
                 if activate[-1] in tmp:
                     raise Exception("command is the prefix of another (" + str(activation) + ")")
                 tmp[activate[-1]] = f
+            return f
         return register_func
     def reset_command_path(self):
         self.path = self.commands[self.mode]

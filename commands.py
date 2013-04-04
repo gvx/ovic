@@ -30,3 +30,8 @@ def n_command(document, editor, count, size):
 def ex_command(document, editor, count, size):
     import urwid
     raise urwid.ExitMainLoop()
+
+@register('w')
+@register('write')
+def ex_command(document, editor, count, size):
+    document.write(document.filename)
