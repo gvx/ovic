@@ -7,7 +7,6 @@ class Editor(urwid.Edit):
         self.mode = 'n'
         self.master = master
         self.edit_attr = []
-        self.count = ''
         self.status_labels = {'i': u' -- INSERT --                            {col},{row}', 'n': u'{filename:40} {col},{row}  {count}', ':':'', '/':''}
         self.commands = {
             'n': {},
@@ -15,7 +14,7 @@ class Editor(urwid.Edit):
             ':': {},
             '/': {},
         }
-        self.reset_command_path()
+        self.reset_command()
         __builtins__['register'] = self.register_command
         import commands
     def register_command(self, activation, immediate=False):
@@ -43,6 +42,8 @@ class Editor(urwid.Edit):
     def reset_command_path(self):
         self.path = self.commands[self.mode]
         self.count = ''
+    def reset_command(self):
+        self.reset_command_path()
         self.future_command = None
     def set_mode(self, mode, size=None):
         self.mode = mode
@@ -100,14 +101,15 @@ class Editor(urwid.Edit):
                             else:
                                 self.master.document.move_caret()
                                 self.move_cursor_to_coords(size, self.master.document.caret.offset, self.master.document.caret.par)
-                            self.reset_command_path()
+                            self.reset_command()
                         elif self.path.immediate:
                             self.do_command(self.path, size)
-                            self.reset_command_path()
+                            self.reset_command()
                         else:
                             self.future_command = self.path
+                            self.reset_command_path()
                 else:
-                    self.reset_command_path()
+                    self.reset_command()
         elif self.mode == 'i':
             if key == 'esc':
                 self.set_mode('n', size)
