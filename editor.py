@@ -62,6 +62,9 @@ class Editor(urwid.Edit):
             if key.isdigit():
                 self.count += key
                 self.draw_statusbar(size)
+            elif key == 'esc':
+                self.reset_command()
+                self.draw_statusbar(size)
             elif key == 'i':
                 self.set_mode('i', size)
             elif key == 'h':
@@ -108,6 +111,7 @@ class Editor(urwid.Edit):
                         else:
                             self.future_command = self.path
                             self.reset_command_path()
+                            self.draw_statusbar(size)
                 else:
                     self.reset_command()
         elif self.mode == 'i':
